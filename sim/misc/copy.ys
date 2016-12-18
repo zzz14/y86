@@ -1,0 +1,57 @@
+# create by: Zizhao Zhang
+# student ID: 2014013430
+# Execution begis at address 0
+            .pos 0
+init:       irmovl  Stack, %esp
+            irmovl  Stack, %ebp
+            call Main
+            halt
+
+.align 4 
+# Source block 
+src: 
+        .long 0x00a 
+        .long 0x0b0 
+        .long 0xc00 
+
+# Destination block 
+dest: 
+        .long 0x111 
+        .long 0x222 
+        .long 0x333
+
+Main:		pushl   %ebp
+            rrmovl  %esp, %ebp
+            irmovl  src, %eax
+            pushl   %eax
+            irmovl  dest, %eax
+            pushl   %eax
+            irmovl  $3, %eax
+            pushl   %eax
+            call    copy_block
+            rrmovl  %ebp, %esp
+            popl    %ebp
+            ret
+
+# int copy_block(int *src, int *dest, int len)
+copy_block: pushl   %ebp
+            rrmovl  %esp, %ebp
+            mrmovl  8(%ebp), %ecx
+            mrmovl  12(%ebp), %ebx
+            mrmovl  16(%ebp), %eax
+            xorl    %edx, %edx          # edx = result = 0
+loop:       andl    %ecx, %ecx
+            je      end
+            mrmovl  (%eax), %esi        # val = *src
+            rmmovl  %esi, (%ebx)        # *dest = val
+            xorl    %esi, %edx          # result ^= val
+            irmovl  $4, %esi
+            addl    %esi, %eax          # src++
+            addl    %esi, %ebx          # dest++
+            irmovl  $-1, %esi
+            addl    %esi, %ecx
+end:        rrmovl %ebp,%esp
+            popl %ebp     
+
+            .pos 0x100
+Stack:
