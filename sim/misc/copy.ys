@@ -40,9 +40,9 @@ copy_block: pushl   %ebp
             mrmovl  12(%ebp), %ebx
             mrmovl  16(%ebp), %eax
             xorl    %edx, %edx          # edx = result = 0
-loop:       andl    %ecx, %ecx
+            andl    %ecx, %ecx
             je      end
-            mrmovl  (%eax), %esi        # val = *src
+loop:       mrmovl  (%eax), %esi        # val = *src
             rmmovl  %esi, (%ebx)        # *dest = val
             xorl    %esi, %edx          # result ^= val
             irmovl  $4, %esi
@@ -50,6 +50,7 @@ loop:       andl    %ecx, %ecx
             addl    %esi, %ebx          # dest++
             irmovl  $-1, %esi
             addl    %esi, %ecx
+            jne     loop
 end:        rrmovl %ebp,%esp
             popl %ebp     
 
