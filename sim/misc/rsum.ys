@@ -1,0 +1,55 @@
+# create by: Zizhao Zhang
+# student ID: 2014013430
+# Execution begis at address 0
+            .pos 0
+init:       irmovl  Stack, %esp
+            irmovl  Stack, %ebp
+            call Main
+            halt
+
+# Sample linked list 
+.align 4 
+ele1: 
+        .long 0x00a 
+        .long ele2 
+ele2: 
+        .long 0x0b0 
+        .long ele3 
+ele3: 
+        .long 0xc00 
+        .long 0
+
+Main:       pushl   %ebp
+            rrmovl  %esp, %ebp
+            irmovl  ele1, %ecx
+            pushl   %ecx
+            call    Rsum_list
+            rrmovl  %ebp, %esp
+            popl    %ebp
+            ret
+
+# int sum_list(list_ptr ls)
+Rsum_list:  pushl %ebp
+            rrmovl %esp,%ebp
+            mrmovl 8(%ebp),%ebx
+            irmovl 0,%eax
+            andl %ebx,%ebx
+            je End
+            mrmovl (%ebx),%ecx
+            pushl %ecx
+            mrmovl 4(%ebx),%ebx
+            pushl %ebx
+            call Rsum_list
+            popl %ebx
+            popl %ecx
+            addl %ecx,%eax
+            rrmovl %ebp,%esp
+            popl %ebp
+            ret
+End:        irmovl 0,%eax
+            rrmovl %ebp,%esp
+            popl %ebp
+            ret
+
+            .pos 0x100
+Stack:
